@@ -25,7 +25,7 @@ elements:
     children:
       - id: "2e525eee-fb35-46e6-901c-3eb8320ddbac"
         name: "Catch"
-        element-type: "catch"        
+        element-type: "catch"
         properties:
           exception: "java.lang.Exception"
           priorityNumber: 0
