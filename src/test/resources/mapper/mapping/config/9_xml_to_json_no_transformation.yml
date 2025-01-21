@@ -346,7 +346,7 @@ actions:
         - 791f02d24a6c41b5a17ff9c467fdbde8
         - 69fac1038c824dc88d24aa266c6d43ae
     transformation:
-  - id: '09b455c5fdb346d18a44bbb0e2fb53ef'
+  - id: "09b455c5fdb346d18a44bbb0e2fb53ef"
     sources:
       - type: attribute
         kind: body
