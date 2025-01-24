@@ -249,7 +249,7 @@ target:
         type:
           name: object
           schema:
-            id: '0975547802234635bd78913b483c0571'
+            id: "0975547802234635bd78913b483c0571"
             attributes:
               - id: 693a46948d6f4b0f810322f811117310
                 name: description
