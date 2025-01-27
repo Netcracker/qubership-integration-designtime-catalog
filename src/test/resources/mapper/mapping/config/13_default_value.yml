@@ -264,7 +264,7 @@ target:
                 name: mandatory
                 type:
                   name: boolean
-              - id: '0739d2d064e24926b33bd2c5c17b5247'
+              - id: "0739d2d064e24926b33bd2c5c17b5247"
                 name: name
                 type:
                   name: string
@@ -356,11 +356,11 @@ actions:
     transformation:
       name: formatDateTime
       parameters:
-        - 'false'
+        - "false"
         - yyyy-MM-dd
         - en_US
         - GMT
-        - 'false'
+        - "false"
         - dd-MM-yyyy
         - en_US
         - GMT
@@ -389,9 +389,9 @@ constants:
       generator:
         name: currentDate
         parameters:
-          - 'true'
-          - ''
-          - ''
+          - "true"
+          - ""
+          - ""
           - GMT
   - id: 793dd697397742b383c5ab4760a5670b
     name: currentDate
@@ -402,7 +402,7 @@ constants:
       generator:
         name: currentDate
         parameters:
-          - 'false'
+          - "false"
           - dd/MM/yyyy
           - en_US
           - GMT
@@ -415,7 +415,7 @@ constants:
       generator:
         name: currentTime
         parameters:
-          - 'false'
+          - "false"
           - HH-mm-ss
           - en_US
           - GMT
@@ -428,8 +428,8 @@ constants:
       generator:
         name: currentDateTime
         parameters:
-          - 'false'
-          - 'dd/MM/yyyy : HH-mm-ss'
+          - "false"
+          - "dd/MM/yyyy : HH-mm-ss"
           - en_US
           - GMT
   - id: 453f6cd7c12f4d6790018b42d4a35a5d
