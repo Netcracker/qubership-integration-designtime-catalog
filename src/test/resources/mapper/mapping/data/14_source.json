@@ -26,19 +26,21 @@
         "type": "groups_element_type_1",
         "title": "groups_element_title_1",
         "canSend": true,
-        "options": [{
-          "name": "groups_element_options_name_1",
-          "type": "groups_element_options_type_1",
-          "title": "groups_element_options_title_1",
-          "multiple": false,
-          "description": "groups_element_options_description_1"
-        }, {
-          "name": "groups_element_options_name_2",
-          "type": "groups_element_options_type_2",
-          "title": "groups_element_options_title_2",
-          "multiple": false,
-          "description": "groups_element_options_description_2"
-        }
+        "options": [
+          {
+            "name": "groups_element_options_name_1",
+            "type": "groups_element_options_type_1",
+            "title": "groups_element_options_title_1",
+            "multiple": false,
+            "description": "groups_element_options_description_1"
+          },
+          {
+            "name": "groups_element_options_name_2",
+            "type": "groups_element_options_type_2",
+            "title": "groups_element_options_title_2",
+            "multiple": false,
+            "description": "groups_element_options_description_2"
+          }
         ],
         "mandatory": true,
         "canReceive": true,
@@ -55,19 +57,21 @@
         "type": "groups_element_type_2",
         "title": "groups_element_title_2",
         "canSend": true,
-        "options": [{
-          "name": "groups_element_options_name_3",
-          "type": "groups_element_options_type_3",
-          "title": "groups_element_options_title_3",
-          "multiple": false,
-          "description": "groups_element_options_description_3"
-        }, {
-          "name": "groups_element_options_name_4",
-          "type": "groups_element_options_type_4",
-          "title": "groups_element_options_title_4",
-          "multiple": false,
-          "description": "groups_element_options_description_4"
-        }
+        "options": [
+          {
+            "name": "groups_element_options_name_3",
+            "type": "groups_element_options_type_3",
+            "title": "groups_element_options_title_3",
+            "multiple": false,
+            "description": "groups_element_options_description_3"
+          },
+          {
+            "name": "groups_element_options_name_4",
+            "type": "groups_element_options_type_4",
+            "title": "groups_element_options_title_4",
+            "multiple": false,
+            "description": "groups_element_options_description_4"
+          }
         ],
         "mandatory": true,
         "canReceive": true,
