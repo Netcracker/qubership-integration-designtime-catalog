@@ -265,7 +265,7 @@ target:
           schema:
             id: 73ddc877fd8d4bf3aceee9b85cd3543b
             attributes:
-              - id: '030962cb4da2494483db32568dfb9689'
+              - id: "030962cb4da2494483db32568dfb9689"
                 name: description
                 type:
                   name: string
@@ -350,7 +350,7 @@ target:
                   itemType:
                     name: reference
                     definitionId: 1201df16ef634c6b82953212a5eefaaa
-              - id: '09a0080d44be4865a2a33d1fdf07bd49'
+              - id: "09a0080d44be4865a2a33d1fdf07bd49"
                 name: parentRestriction
                 type:
                   name: array
