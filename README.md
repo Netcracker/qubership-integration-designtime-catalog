@@ -9,3 +9,5 @@ Installation is handled via docker-compose: [qubership-integration-platform](htt
 ## User Guide
 
 This microservice handles design time configuration, utilized then by [Engine](https://github.com/Netcracker/qubership-integration-engine) microservice.
+
+Test MR
