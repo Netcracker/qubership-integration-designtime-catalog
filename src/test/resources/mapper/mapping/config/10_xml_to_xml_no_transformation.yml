@@ -86,7 +86,7 @@ source:
                                                     itemType:
                                                       name: object
                                                       schema:
-                                                        id: '02788cc2b2de4cb7b5e9a58c080081ef'
+                                                        id: "02788cc2b2de4cb7b5e9a58c080081ef"
                                                         attributes:
                                                           - id: baaa422ffcf64f82abbe9dce0220a658
                                                             name: ns2:geographicLocation
@@ -130,7 +130,7 @@ source:
                                                             name: "@xmlns:xs"
                                                             type:
                                                               name: string
-                                                          - id: '082e536958c64eedb7fd232f05f411e8'
+                                                          - id: "082e536958c64eedb7fd232f05f411e8"
                                                             name: "@xmlns:xsi"
                                                             type:
                                                               name: string
@@ -456,7 +456,7 @@ actions:
         - a8e5e5f55abe4721818d0b51fefe2b75
         - 9b2ad869b83e4d7080fcdb67f7a50881
     transformation:
-  - id: '091e62d71f3348679a794b3c21942fb3'
+  - id: "091e62d71f3348679a794b3c21942fb3"
     sources:
       - type: attribute
         kind: body

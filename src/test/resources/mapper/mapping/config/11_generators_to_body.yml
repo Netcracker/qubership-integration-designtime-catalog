@@ -180,7 +180,7 @@ target:
       sourceType: schema
       dataFormat: JSON
 constants:
-  - id: '08af257c224546d787335d0cfcb04568'
+  - id: "08af257c224546d787335d0cfcb04568"
     name: manual
     type:
       name: string
@@ -227,7 +227,7 @@ actions:
   - id: 141c708806bc4e7c8a5e7434aff2221d
     sources:
       - type: constant
-        constantId: '08af257c224546d787335d0cfcb04568'
+        constantId: "08af257c224546d787335d0cfcb04568"
     target:
       type: attribute
       kind: body
