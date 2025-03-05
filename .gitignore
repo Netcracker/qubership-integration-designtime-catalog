@@ -17,6 +17,9 @@ bin/
 *.iml
 .jpb
 
+# VSCODE
+.vscode
+
 # Cassandra
 .toDelete
 
