@@ -38,5 +38,5 @@ public class KameletRequest {
     @Schema(description = "Input kamelet properties")
     private Map<String, KameletProperty> properties;
     @Schema(description = "Input kamelet specification")
-    private String specification;
+    private String template;
 }

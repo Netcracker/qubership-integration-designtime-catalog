@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.v1.KameletBuilder;
 import org.apache.camel.v1.KameletSpec;
@@ -33,6 +34,7 @@ import org.qubership.integration.platform.catalog.persistence.configs.entity.act
 import org.qubership.integration.platform.catalog.persistence.configs.entity.actionlog.LogOperation;
 import org.qubership.integration.platform.catalog.persistence.configs.repository.QIPKameletRepository;
 import org.qubership.integration.platform.catalog.service.ActionsLogService;
+import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.kamelet.KameletProperty;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.kamelet.KameletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,7 +54,7 @@ public class KameletService {
 
     @Autowired
     public KameletService(
-            @Qualifier("kameletYamlMapper") ObjectMapper objectMapper, //TODO Mb we need custom mapper for this
+            @Qualifier("kameletYamlMapper") ObjectMapper objectMapper,
             ActionsLogService actionLogger,
             QIPKameletRepository qipKameletRepository)
     {
@@ -61,6 +63,7 @@ public class KameletService {
         this.qipKameletRepository = qipKameletRepository;
     }
 
+    @Transactional
     public Kamelet createKamelet (KameletRequest kameletRequest) {
         //Section metadata:
         ObjectMeta objectMeta = new ObjectMetaBuilder()
@@ -89,7 +92,7 @@ public class KameletService {
 
 
         //Section spec:template
-        Template template = getTemplate(kameletRequest.getSpecification());
+        Template template = getTemplate(kameletRequest.getTemplate());
 
         //Section spec:
         KameletSpec spec = new KameletSpecBuilder()
@@ -120,9 +123,26 @@ public class KameletService {
                 .orElseThrow(() -> new EntityNotFoundException(KAMELET_WITH_ID_NOT_FOUND + kameletId));
     }
 
+    @Transactional
     public Kamelet updateKamelet(Kamelet kamelet, KameletRequest kameletRequest) {
+        org.apache.camel.v1.Kamelet apacheKamelet = getKamelet(kamelet);
+        //Section spec:definition
+        Definition kameletDefinition = apacheKamelet.getSpec().getDefinition();
+
+        //Section spec:definition:required
+        kameletDefinition.setRequired(kameletRequest.getRequired());
+
+        //Section spec:definition:properties
+        kameletDefinition.setProperties(getProperties(kameletRequest.getProperties()));
+
+        //Section spec:template
+        Template template = getTemplate(kameletRequest.getTemplate());
+        apacheKamelet.getSpec().setTemplate(template);
 
 
+        kamelet.setSpecification(getKameletSpecification(apacheKamelet));
+        kamelet =  qipKameletRepository.save(kamelet);
+        logKameletAction(kamelet,LogOperation.UPDATE);
         return kamelet;
     }
 
@@ -161,6 +181,27 @@ public class KameletService {
             throw new RuntimeException(e);
         }
         return kameletSpec;
+    }
+
+    private  org.apache.camel.v1.Kamelet getKamelet(Kamelet kamelet) {
+        try {
+            return objectMapper.readValue(kamelet.getSpecification(),  org.apache.camel.v1.Kamelet.class);
+        } catch (JsonProcessingException e) {
+            //TODO Correct exception
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<String, org.apache.camel.v1.kameletspec.definition.Properties> getProperties(Map<String, KameletProperty> properties) {
+        Map<String,org.apache.camel.v1.kameletspec.definition.Properties> result = new HashMap<>();
+        properties.forEach((key, value) -> {
+            org.apache.camel.v1.kameletspec.definition.Properties prop = new org.apache.camel.v1.kameletspec.definition.Properties();
+            prop.setType(value.getType());
+            prop.setDescription(value.getDescription());
+            prop.setTitle(value.getTitle());
+            result.put(key, prop);
+        });
+        return result;
     }
 
     private void logKameletAction(Kamelet kamelet, LogOperation operation) {
