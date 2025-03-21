@@ -21,7 +21,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.qubership.integration.platform.catalog.model.library.KameletDTO;
 import org.qubership.integration.platform.catalog.persistence.configs.entity.Kamelet;
+import org.qubership.integration.platform.catalog.service.KameletStorageService;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.kamelet.KameletRequest;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.kamelet.KameletResponse;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.mapping.KameletMapper;
@@ -41,11 +43,13 @@ public class KameletController {
 
     private final KameletService kameletService;
     private final KameletMapper kameletMapper;
+    private final KameletStorageService kameletStorageService;
 
     @Autowired
-    public KameletController(KameletService kameletService, KameletMapper kameletMapper) {
+    public KameletController(KameletService kameletService, KameletMapper kameletMapper, KameletStorageService kameletStorageService) {
         this.kameletService = kameletService;
         this.kameletMapper = kameletMapper;
+        this.kameletStorageService = kameletStorageService;
     }
 
     @PostMapping
@@ -84,6 +88,32 @@ public class KameletController {
         log.info("Request to remove kamelet with id: {}", kameletId);
         kameletService.deleteKamelet(kameletId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/storage")
+    public ResponseEntity<String> getKamelet() {
+        return ResponseEntity.ok(kameletStorageService.getKamelets().keySet().toString());
+    }
+
+    @GetMapping("/storage/{name}")
+    public ResponseEntity<String> getKamelet(@PathVariable String name) {
+        String kameletJson = kameletStorageService.getKameletByName(name);
+        log.info("Request to retrieve kamelet with name: {}", kameletJson);
+        return (kameletJson != null) ? ResponseEntity.ok(kameletJson) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/storage/{name}/spec")
+    public ResponseEntity<String> getKameletSpec(@PathVariable String name) {
+        String specJson = kameletStorageService.getKameletSpec(name);
+        log.info("Request to retrieve specification of a kamelet with name: {}", specJson);
+        return (specJson != null) ? ResponseEntity.ok(specJson) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/storage/{name}/template")
+    public ResponseEntity<String> getKameletTemplate(@PathVariable String name) {
+        String templateJson = kameletStorageService.getKameletTemplate(name);
+        log.info("Request to retrieve template of a kamelet with name: {}", templateJson);
+        return (templateJson != null) ? ResponseEntity.ok(templateJson) : ResponseEntity.notFound().build();
     }
 
 }
