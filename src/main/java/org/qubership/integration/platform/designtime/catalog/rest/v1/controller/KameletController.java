@@ -17,11 +17,12 @@
 package org.qubership.integration.platform.designtime.catalog.rest.v1.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.qubership.integration.platform.catalog.model.library.KameletDTO;
 import org.qubership.integration.platform.catalog.persistence.configs.entity.Kamelet;
 import org.qubership.integration.platform.catalog.service.KameletStorageService;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.kamelet.KameletRequest;
@@ -33,6 +34,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -90,9 +95,22 @@ public class KameletController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/storage")
+    @GetMapping("/storage/")
     public ResponseEntity<String> getKamelet() {
-        return ResponseEntity.ok(kameletStorageService.getKamelets().keySet().toString());
+        String json = null;
+        try {
+            json = new ObjectMapper().writeValueAsString(kameletStorageService.getKamelets().values().stream().map(k -> {
+                Map<String, Object> kameletDef = new HashMap<>();
+                kameletDef.put("name", k.getMetadata() != null ? k.getMetadata().get("name") :  null);
+                kameletDef.put("type", k.getLabels() != null ? k.getLabels().get("type") :  null);
+                kameletDef.put("title", k.getSpec().get("definition") != null ? k.getSpec().get("definition").get("title") : null);
+                return kameletDef;
+            }).collect(Collectors.toSet()));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResponseEntity.ok(json);
     }
 
     @GetMapping("/storage/{name}")
@@ -102,7 +120,7 @@ public class KameletController {
         return (kameletJson != null) ? ResponseEntity.ok(kameletJson) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/storage/{name}/spec")
+    @GetMapping("/storage/{name}/definition")
     public ResponseEntity<String> getKameletSpec(@PathVariable String name) {
         String specJson = kameletStorageService.getKameletSpec(name);
         log.info("Request to retrieve specification of a kamelet with name: {}", specJson);
