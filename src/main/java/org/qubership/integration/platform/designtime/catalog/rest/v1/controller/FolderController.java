@@ -166,11 +166,14 @@ public class FolderController {
     @PostMapping(value = "/search", produces = "application/json")
     @Operation(description = "Search from root folder with chains")
     public ResponseEntity<List<? extends FolderItemResponse>> searchRootFolderWithChains(@RequestBody @Parameter(description = "Folder search request object") ChainSearchRequestDTO chainSearchRequestDTO) {
-        List<Chain> chains = chainService.searchChains(chainSearchRequestDTO);
-        List<Folder> relatedFolders = folderService.getFoldersHierarchically(chains);
+        List<Chain> foundChains = chainService.searchChains(chainSearchRequestDTO);
+        List<Folder> foundFolders = folderService.searchFolders(chainSearchRequestDTO);
+        List<? extends FoldableEntity> entities = Stream.concat(foundChains.stream(), foundFolders.stream()).toList();
+        List<Folder> relatedFolders = folderService.getFoldersHierarchically(entities);
+        List<Folder> folders = Stream.concat(relatedFolders.stream(), foundFolders.stream()).toList();
 
-        prepareSearchFilterResult(chains, relatedFolders);
-        List<? extends FolderItemResponse> response = getListResponse(chains, relatedFolders, true);
+        prepareSearchFilterResult(foundChains, folders);
+        List<? extends FolderItemResponse> response = getListResponse(foundChains, folders, true);
         return ResponseEntity.ok(response);
     }
 
