@@ -17,12 +17,11 @@
 package org.qubership.integration.platform.designtime.catalog.rest.v1.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.qubership.integration.platform.catalog.model.library.KameletDescriptionDTO;
 import org.qubership.integration.platform.catalog.persistence.configs.entity.Kamelet;
 import org.qubership.integration.platform.catalog.service.KameletStorageService;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.kamelet.KameletRequest;
@@ -35,9 +34,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -57,18 +54,18 @@ public class KameletController {
         this.kameletStorageService = kameletStorageService;
     }
 
-    @PostMapping
-    @Operation(description = "Create blank kamelet")
-    public ResponseEntity<KameletResponse> createBlankKamelet(@RequestBody KameletRequest kameletRequest) {
+    @PostMapping("/custom")
+    @Operation(description = "Create blank custom kamelet")
+    public ResponseEntity<KameletResponse> createBlankKamelet(@RequestBody @Parameter(description = "Custom kamelet create request object")  KameletRequest kameletRequest) {
         log.info("Request to create new kamelet");
         Kamelet result = kameletService.createKamelet(kameletRequest);
 
         return ResponseEntity.ok(kameletMapper.toKameletResponseLight(result));
     }
 
-    @GetMapping("/{kameletId}")
+    @GetMapping("/custom/{kameletId}/spec")
     @Operation(description = "Get Kamelet Specification in YML")
-    public ResponseEntity<String> getKameletSpecification(@PathVariable @Parameter(description = "Kamelet id") String kameletId) {
+    public ResponseEntity<String> getKameletSpecification(@PathVariable @Parameter(description = "Custom kamelet id") String kameletId) {
         if (log.isDebugEnabled()) {
             log.debug("Request to receive yml specification of kamelet with id: {}", kameletId);
         }
@@ -76,10 +73,10 @@ public class KameletController {
         return ResponseEntity.ok(specification);
     }
 
-    @PutMapping("/{kameletId}")
+    @PutMapping("/custom/{kameletId}")
     @Operation(description = "Update exiting kamelet")
-    public ResponseEntity<KameletResponse> updateKamelet(@PathVariable @Parameter(description = "Kamelet id") String kameletId,
-                                                         @RequestBody @Parameter(description = "Kamelet update request object") KameletRequest kameletRequest) {
+    public ResponseEntity<KameletResponse> updateKamelet(@PathVariable @Parameter(description = "Custom kamelet id") String kameletId,
+                                                         @RequestBody @Parameter(description = "Custom kamelet update request object") KameletRequest kameletRequest) {
        Kamelet kamelet = kameletService.findById(kameletId);
        kamelet = kameletService.updateKamelet(kamelet, kameletRequest);
 
@@ -87,47 +84,35 @@ public class KameletController {
     }
 
 
-    @DeleteMapping("/{kameletId}")
+    @DeleteMapping("/custom/{kameletId}")
     @Operation(description = "Delete kamelet")
-    public ResponseEntity<Void> deleteKamelet(@PathVariable @Parameter(description = "Kamelet id") String kameletId) {
+    public ResponseEntity<Void> deleteKamelet(@PathVariable @Parameter(description = "Custom kamelet id") String kameletId) {
         log.info("Request to remove kamelet with id: {}", kameletId);
         kameletService.deleteKamelet(kameletId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/storage/")
-    public ResponseEntity<String> getKamelet() {
-        String json = null;
-        try {
-            json = new ObjectMapper().writeValueAsString(kameletStorageService.getKamelets().values().stream().map(k -> {
-                Map<String, Object> kameletDef = new HashMap<>();
-                kameletDef.put("name", k.getMetadata() != null ? k.getMetadata().get("name") :  null);
-                kameletDef.put("type", k.getLabels() != null ? k.getLabels().get("type") :  null);
-                kameletDef.put("title", k.getSpec().get("definition") != null ? k.getSpec().get("definition").get("title") : null);
-                return kameletDef;
-            }).collect(Collectors.toSet()));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return ResponseEntity.ok(json);
+    @GetMapping("/library")
+    public ResponseEntity<List<KameletDescriptionDTO>> getKameletLibrary() {
+        List<KameletDescriptionDTO> kameletDescriptionList = kameletStorageService.getKameletsDefinitions();
+        return ResponseEntity.ok(kameletDescriptionList);
     }
 
-    @GetMapping("/storage/{name}")
+    @GetMapping("/library/{name}")
     public ResponseEntity<String> getKamelet(@PathVariable String name) {
         String kameletJson = kameletStorageService.getKameletByName(name);
         log.info("Request to retrieve kamelet with name: {}", kameletJson);
         return (kameletJson != null) ? ResponseEntity.ok(kameletJson) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/storage/{name}/definition")
+    @GetMapping("/library/{name}/definition")
     public ResponseEntity<String> getKameletSpec(@PathVariable String name) {
         String specJson = kameletStorageService.getKameletSpec(name);
         log.info("Request to retrieve specification of a kamelet with name: {}", specJson);
         return (specJson != null) ? ResponseEntity.ok(specJson) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/storage/{name}/template")
+    @GetMapping("/library/{name}/template")
     public ResponseEntity<String> getKameletTemplate(@PathVariable String name) {
         String templateJson = kameletStorageService.getKameletTemplate(name);
         log.info("Request to retrieve template of a kamelet with name: {}", templateJson);

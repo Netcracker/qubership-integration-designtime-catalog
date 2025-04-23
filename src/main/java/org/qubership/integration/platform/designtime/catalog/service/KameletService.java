@@ -77,7 +77,6 @@ public class KameletService {
                 .withDescription(kameletRequest.getDescription())
                 .build();
 
-
         //Section spec:dataType
         //TODO recive types from request
         Map<String, Types> types = new HashMap<>();
