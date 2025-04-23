@@ -1,6 +1,7 @@
 package org.qubership.integration.platform.designtime.catalog.rest.v1.dto.template;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.qubership.integration.platform.catalog.model.dto.BaseResponse;
@@ -18,4 +19,6 @@ public class TemplateResponseDTO extends BaseResponse {
     private TemplateType type;
     @Builder.Default
     private Map<String, Object> properties = new HashMap<>();
+
+    private List<TemplateUsageDTO> usages;
 }
