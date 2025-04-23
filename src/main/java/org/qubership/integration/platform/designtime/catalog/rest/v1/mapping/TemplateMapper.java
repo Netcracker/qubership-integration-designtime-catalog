@@ -6,10 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.qubership.integration.platform.catalog.model.dto.template.TemplateUsage;
 import org.qubership.integration.platform.catalog.persistence.configs.entity.template.Template;
 import org.qubership.integration.platform.catalog.util.MapperUtils;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.template.TemplateRequestDTO;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.template.TemplateResponseDTO;
+import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.template.TemplateUsageDTO;
 
 @Mapper(componentModel = "spring", 
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -30,4 +32,6 @@ public interface TemplateMapper {
     List<TemplateResponseDTO> asResponse(List<Template> templates);
 
     void merge(TemplateRequestDTO templateDto, @MappingTarget Template template);
+
+    List<TemplateUsageDTO> convertUsages(List<TemplateUsage> source);
 }
