@@ -150,6 +150,29 @@ public class KameletService {
         return kamelet.getSpecification();
     }
 
+    public String getKameletDefinition(String kameletId) {
+        Kamelet kamelet = findById(kameletId);
+        org.apache.camel.v1.Kamelet apacheKamelet = getKamelet(kamelet);
+        try {
+           return objectMapper.writeValueAsString(apacheKamelet.getSpec().getDefinition());
+        } catch (JsonProcessingException e) {
+            //TODO Correct exception
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getKameletTemplate(String kameletId) {
+        Kamelet kamelet = findById(kameletId);
+        org.apache.camel.v1.Kamelet apacheKamelet = getKamelet(kamelet);
+        try {
+           return objectMapper.writeValueAsString(apacheKamelet.getSpec().getTemplate());
+        } catch (JsonProcessingException e) {
+            //TODO Correct exception
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public void deleteKamelet(String kameletId) {
         Kamelet kamelet = findById(kameletId);
         qipKameletRepository.deleteById(kameletId);

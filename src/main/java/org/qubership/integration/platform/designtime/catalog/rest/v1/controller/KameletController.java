@@ -73,6 +73,26 @@ public class KameletController {
         return ResponseEntity.ok(specification);
     }
 
+    @GetMapping("/custom/{kameletId}/definition")
+    @Operation(description = "Get Kamelet Definition in YML")
+    public ResponseEntity<String> getKameletDefinition(@PathVariable @Parameter(description = "Custom kamelet id") String kameletId) {
+        if (log.isDebugEnabled()) {
+            log.debug("Request to receive definition of kamelet with id: {}", kameletId);
+        }
+        String specification = kameletService.getKameletDefinition(kameletId);
+        return ResponseEntity.ok(specification);
+    }
+
+    @GetMapping("/custom/{kameletId}/template")
+    @Operation(description = "Get Kamelet Template in YML")
+    public ResponseEntity<String> getKameletTEmplate(@PathVariable @Parameter(description = "Custom kamelet id") String kameletId) {
+        if (log.isDebugEnabled()) {
+            log.debug("Request to receive template of kamelet with id: {}", kameletId);
+        }
+        String specification = kameletService.getKameletTemplate(kameletId);
+        return ResponseEntity.ok(specification);
+    }
+
     @PutMapping("/custom/{kameletId}")
     @Operation(description = "Update exiting kamelet")
     public ResponseEntity<KameletResponse> updateKamelet(@PathVariable @Parameter(description = "Custom kamelet id") String kameletId,
