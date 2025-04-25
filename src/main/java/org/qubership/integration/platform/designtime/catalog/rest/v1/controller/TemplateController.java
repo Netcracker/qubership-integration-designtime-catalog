@@ -51,8 +51,7 @@ public class TemplateController {
     @GetMapping(produces = "application/json")
     @Operation(description = "Get all templates")
     public List<TemplateResponseDTO> getTemplates(@RequestParam(required = false) TemplateType type) {
-        List<Template> templates = templateService.findAllByType(type);
-        return templateMapper.asResponse(templates);
+        return templateService.findByType(type);
     }
 
     @PutMapping(value = "/{templateId}", produces = "application/json")
