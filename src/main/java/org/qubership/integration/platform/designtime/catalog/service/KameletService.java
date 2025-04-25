@@ -56,15 +56,14 @@ public class KameletService {
     public KameletService(
             @Qualifier("kameletYamlMapper") ObjectMapper objectMapper,
             ActionsLogService actionLogger,
-            QIPKameletRepository qipKameletRepository)
-    {
+            QIPKameletRepository qipKameletRepository) {
         this.objectMapper = objectMapper;
         this.actionLogger = actionLogger;
         this.qipKameletRepository = qipKameletRepository;
     }
 
     @Transactional
-    public Kamelet createKamelet (KameletRequest kameletRequest) {
+    public Kamelet createKamelet(KameletRequest kameletRequest) {
         //Section metadata:
         ObjectMeta objectMeta = new ObjectMetaBuilder()
                 .withName(getNameFromTitle(kameletRequest.getTitle()))
@@ -86,7 +85,7 @@ public class KameletService {
         DataTypes dataTypes = new DataTypesBuilder()
                 .withTypes(types)
                 .build();
-        Map<String,DataTypes> dataTypesMap = new HashMap<>();
+        Map<String, DataTypes> dataTypesMap = new HashMap<>();
         dataTypesMap.put("out", dataTypes);
 
 
@@ -109,7 +108,7 @@ public class KameletService {
         //QIP Kamelet
         Kamelet qipKamelet = new Kamelet();
         qipKamelet.setName(kameletRequest.getTitle());
-        qipKamelet.setSpecification(getKameletSpecification(apacheKamelet));
+        qipKamelet.setSpecification(getKameletSpecificationString(apacheKamelet));
 
         qipKamelet = qipKameletRepository.save(qipKamelet);
 
@@ -139,9 +138,9 @@ public class KameletService {
         apacheKamelet.getSpec().setTemplate(template);
 
 
-        kamelet.setSpecification(getKameletSpecification(apacheKamelet));
+        kamelet.setSpecification(getKameletSpecificationString(apacheKamelet));
         kamelet =  qipKameletRepository.save(kamelet);
-        logKameletAction(kamelet,LogOperation.UPDATE);
+        logKameletAction(kamelet, LogOperation.UPDATE);
         return kamelet;
     }
 
@@ -180,7 +179,7 @@ public class KameletService {
     }
 
     private String getNameFromTitle(String kameletTitle) {
-        return kameletTitle.trim().toLowerCase().replaceAll("\\s+","-");
+        return kameletTitle.trim().toLowerCase().replaceAll("\\s+", "-");
     }
 
     private Template getTemplate(String templateString) {
@@ -194,7 +193,7 @@ public class KameletService {
         return template;
     }
 
-    private String getKameletSpecification(org.apache.camel.v1.Kamelet kamelet) {
+    private String getKameletSpecificationString(org.apache.camel.v1.Kamelet kamelet) {
         String kameletSpec = null;
         try {
             kameletSpec = objectMapper.writeValueAsString(kamelet);
@@ -215,7 +214,7 @@ public class KameletService {
     }
 
     private Map<String, org.apache.camel.v1.kameletspec.definition.Properties> getProperties(Map<String, KameletProperty> properties) {
-        Map<String,org.apache.camel.v1.kameletspec.definition.Properties> result = new HashMap<>();
+        Map<String, org.apache.camel.v1.kameletspec.definition.Properties> result = new HashMap<>();
         properties.forEach((key, value) -> {
             org.apache.camel.v1.kameletspec.definition.Properties prop = new org.apache.camel.v1.kameletspec.definition.Properties();
             prop.setType(value.getType());
