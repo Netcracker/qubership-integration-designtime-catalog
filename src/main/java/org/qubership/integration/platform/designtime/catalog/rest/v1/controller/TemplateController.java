@@ -37,7 +37,7 @@ public class TemplateController {
     @Operation(description = "Create a new template")
     public ResponseEntity<TemplateResponseDTO> createTemplate(@RequestBody TemplateRequestDTO request) {
         Template template = templateMapper.mapRequest(request);
-        template = templateService.save(template);
+        template = templateService.createIfDoesNotExist(template);
 
         return ResponseEntity.ok(templateMapper.asResponse(template));
     }
@@ -61,7 +61,7 @@ public class TemplateController {
             @RequestBody @Parameter(description = "Template modifying request object") TemplateRequestDTO templateDto) {
         Template template = templateService.findById(templateId);
         templateMapper.merge(templateDto, template);
-        templateService.save(template);
+        templateService.update(template);
 
         return ResponseEntity.ok(templateMapper.asResponse(template));
     }
@@ -70,6 +70,6 @@ public class TemplateController {
     @Operation(description = "Delete specified template")
     public void deleteTemplate(@PathVariable @Parameter(description = "Template id") String templateId) {
         log.info("Request to delete template {}", templateId);
-        templateService.delete(templateId);
+        templateService.deleteIfNotUsed(templateId);
     }
 }

@@ -11,6 +11,8 @@ import org.qubership.integration.platform.catalog.model.dto.template.TemplateUsa
 import org.qubership.integration.platform.catalog.persistence.configs.entity.template.Template;
 import org.qubership.integration.platform.catalog.persistence.configs.entity.template.TemplateType;
 import org.qubership.integration.platform.catalog.persistence.configs.repository.template.TemplateRepository;
+import org.qubership.integration.platform.catalog.service.ActionsLogService;
+import org.qubership.integration.platform.catalog.service.TemplateBaseService;
 import org.qubership.integration.platform.designtime.catalog.exception.exceptions.BadRequestException;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.template.TemplateResponseDTO;
 import org.qubership.integration.platform.designtime.catalog.rest.v1.dto.template.TemplateUsageDTO;
@@ -23,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class TemplateService {
+public class TemplateService extends TemplateBaseService {
     public static final String TEMPLATE_WITH_ID_NOT_FOUND_MESSAGE = "Can't find template with id: ";
     public static final String TEMPLATE_WITH_NAME_ALREADY_EXISTS = "Template with name %s already exists";
     public static final String TEMPLATE_TYPE_SHOULD_BE_SET_MESSAGE = "Template type should be set";
@@ -31,11 +33,12 @@ public class TemplateService {
 
     private final Map<TemplateType, Function<List<String>, List<TemplateUsage>>> getUsagesMethods;
 
-    private final TemplateRepository templateRepository;
     private final TemplateMapper templateMapper;
 
-    public TemplateService(TemplateRepository templateRepository, TemplateMapper templateMapper) {
-        this.templateRepository = templateRepository;
+    public TemplateService(TemplateRepository templateRepository,
+            ActionsLogService actionsLogger,
+            TemplateMapper templateMapper) {
+        super(templateRepository, actionsLogger);
         this.templateMapper = templateMapper;
         this.getUsagesMethods = ImmutableMap
                 .<TemplateType, Function<List<String>, List<TemplateUsage>>>builder()
@@ -43,9 +46,9 @@ public class TemplateService {
                 .build();
     }
 
-    public Template save(Template template) {
+    public Template createIfDoesNotExist(Template template) {
         if (!doesTemplateExist(template)) {
-            return templateRepository.save(template);
+            return create(template);
         } else {
             throw new BadRequestException(String.format(TEMPLATE_WITH_NAME_ALREADY_EXISTS, template.getName()));
         }
@@ -69,7 +72,7 @@ public class TemplateService {
         return result;
     }
 
-    public void delete(String templateId) {
+    public void deleteIfNotUsed(String templateId) {
         Template template = templateRepository.getReferenceById(templateId);
         Function<List<String>, List<TemplateUsage>> getUsagesFunction = getUsagesMethods.get(template.getType());
         if (getUsagesFunction != null) {
@@ -79,7 +82,7 @@ public class TemplateService {
             }
         }
 
-        templateRepository.delete(template);
+        delete(template);
     }
 
     private List<TemplateResponseDTO> findTemplatesWithUsages(TemplateType type) {
