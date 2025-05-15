@@ -20,7 +20,6 @@
         <!-- 3rd party dependencies -->
 
         <spring-cloud.version>2024.0.0</spring-cloud.version>
-        <springdoc.version>2.6.0</springdoc.version>
 
         <!-- Plugins -->
 
