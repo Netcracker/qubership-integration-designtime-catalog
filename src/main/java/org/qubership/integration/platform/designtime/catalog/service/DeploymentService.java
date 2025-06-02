@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,6 +44,11 @@ public class DeploymentService {
 
     public void deleteAllByChainId(String id) {
         restTemplateMS.delete(String.format("%s/v1/catalog/chains/%s/deployments", runtimeCatalogUrl, id));
+    }
+
+    public void deleteAllByChainIds(List<String> ids) {
+        // TODO refactor after merging of design and runtime catalogs
+        ids.parallelStream().forEach(this::deleteAllByChainId);
     }
 
     /*

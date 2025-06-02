@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.qubership.integration.platform.catalog.model.constant.CamelNames.*;
 import static org.qubership.integration.platform.catalog.model.constant.CamelOptions.*;
@@ -47,12 +48,37 @@ public class ChainFilterSpecificationBuilder {
         this.filterConditionPredicateBuilderFactory = filterConditionPredicateBuilderFactory;
     }
 
-    public Specification<Chain> buildSearch(Collection<FilterRequestDTO> filters) {
+    public Specification<Chain> buildSearch(String searchString) {
+        Collection<FilterRequestDTO> filters = buildFiltersFromSearchString(searchString);
         return build(filters, CriteriaBuilder::or, true);
     }
 
     public Specification<Chain> buildFilter(Collection<FilterRequestDTO> filters) {
         return build(filters, CriteriaBuilder::and, false);
+    }
+
+    private List<FilterRequestDTO> buildFiltersFromSearchString(String searchString) {
+        return Stream.of(
+                FilterFeature.ID,
+                FilterFeature.NAME,
+                FilterFeature.DESCRIPTION,
+                FilterFeature.BUSINESS_DESCRIPTION,
+                FilterFeature.ASSUMPTIONS,
+                FilterFeature.OUT_OF_SCOPE,
+                FilterFeature.PATH,
+                FilterFeature.METHOD,
+                FilterFeature.EXCHANGE,
+                FilterFeature.TOPIC,
+                FilterFeature.QUEUE,
+                FilterFeature.LABELS,
+                FilterFeature.CLASSIFIER
+        ).map(feature -> FilterRequestDTO
+                .builder()
+                .feature(feature)
+                .value(searchString)
+                .condition(FilterCondition.CONTAINS)
+                .build()
+        ).toList();
     }
 
     public Specification<Chain> build(
@@ -193,6 +219,9 @@ public class ChainFilterSpecificationBuilder {
             case ID -> conditionPredicateBuilder.apply(root.get("id"), value);
             case NAME -> conditionPredicateBuilder.apply(root.get("name"), value);
             case DESCRIPTION -> conditionPredicateBuilder.apply(root.get("description"), value);
+            case BUSINESS_DESCRIPTION -> conditionPredicateBuilder.apply(root.get("businessDescription"), value);
+            case ASSUMPTIONS -> conditionPredicateBuilder.apply(root.get("assumptions"), value);
+            case OUT_OF_SCOPE -> conditionPredicateBuilder.apply(root.get("outOfScope"), value);
             case ENGINES -> conditionPredicateBuilder.apply(
                     getDeploymentPropertyExpression(root, "domain"), value);
             case LOGGING, STATUS, ELEMENT -> criteriaBuilder.conjunction();
