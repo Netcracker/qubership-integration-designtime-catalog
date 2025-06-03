@@ -238,6 +238,24 @@ public class ChainController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/bulk-delete")
+    @Operation(description = "Delete chains")
+    public ResponseEntity<Void> bulkDeleteChains(
+            @RequestBody
+            @Parameter(description = "List of chain IDs")
+            List<String> ids
+    ) {
+        log.info("Request to bulk delete chains: {}", ids);
+        ids.forEach(id -> {
+            try {
+                chainService.deleteById(id);
+            } catch (Exception exception) {
+                log.error("Error deleting chain {}", id, exception);
+            }
+        });
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/{chainId}/copy")
     @Operation(description = "Copy existing chain to a specified folder")
     public ResponseEntity<ChainResponse> copy(@PathVariable @Parameter(description = "Chain id") String chainId,
