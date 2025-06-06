@@ -151,7 +151,7 @@ public class FolderService {
         CriteriaQuery<Folder> query = criteriaBuilder.createQuery(Folder.class);
         Root<Folder> root = query.from(Folder.class);
 
-        Specification<Folder> folderSpecification = (r, q , cb) ->
+        Specification<Folder> folderSpecification = (r, q, cb) ->
                 isNull(request.getFolderId())
                         ? cb.isNull(r.get("parentFolder").get("id"))
                         : cb.equal(r.get("parentFolder").get("id"), cb.literal(request.getFolderId()));
