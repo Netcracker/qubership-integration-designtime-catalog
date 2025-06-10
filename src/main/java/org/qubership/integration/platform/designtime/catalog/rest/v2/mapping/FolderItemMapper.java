@@ -20,7 +20,7 @@ import org.qubership.integration.platform.designtime.catalog.rest.v2.dto.UpdateF
         }
 )
 public interface FolderItemMapper {
-    @Mapping(target="id", nullValueCheckStrategy= NullValueCheckStrategy.ALWAYS)
+    @Mapping(target = "id", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     Folder asFolder(CreateFolderRequest request);
 
     Folder asFolder(UpdateFolderRequest request);
