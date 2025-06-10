@@ -3,7 +3,7 @@
 Design-Time Catalog Service is a part of Qubership Integration Platform.
 It provides an API to create and manage integration flows (so-called integration chains).
 Manages a library of elements that is used as building blocks to construct integration chains.
-It also provides an API to discover services to integrate with or manually create its definitions. 
+It also provides an API to discover services to integrate with or manually create its definitions.
 All operations on integration chains and services definitions are being logged, and an API is provided to get the action journal.
 
 ## Installation
@@ -19,7 +19,7 @@ Application parameters can be set by environment variables.
 | Environment variable               | Default value                                        | Description                                                                                                                              |
 |------------------------------------|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | ROOT_LOG_LEVEL                     | INFO                                                 | Logging level                                                                                                                            |
-| CONSUL_URL                         | http://consul:8500                                   | Consul URL                                                                                                                               |
+| CONSUL_URL                         | http://consul:8500/                                  | Consul URL                                                                                                                               |
 | CONSUL_ADMIN_TOKEN                 |                                                      | Consul assess token                                                                                                                      |
 | ACTION_LOG_CLEANUP_INTERVAL        | 14 days                                              | Maximum age of action log records. Records older than specified value will be deleted. Examples: '1 hour', '7 days', '2 years 3 month'   |
 | ACTION_LOG_CLEANUP_CRON            | 0 0 0 ? * SAT                                        | Action log cleanup task schedule in cron expression format                                                                               |
@@ -67,12 +67,3 @@ This software is licensed under Apache License Version 2.0. License text is loca
 ## Additional Resources
 
 - [Qubership Integration Platform](https://github.com/Netcracker/qubership-integration-platform) — сore deployment guide.
-
-
-## Installation
-
-Installation is handled via docker-compose: [qubership-integration-platform](https://github.com/Netcracker/qubership-integration-platform).
-
-## User Guide
-
-This microservice handles design time configuration, utilized then by [Engine](https://github.com/Netcracker/qubership-integration-engine) microservice.
