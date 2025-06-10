@@ -2,6 +2,7 @@ package org.qubership.integration.platform.designtime.catalog.rest.v2.mapping;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.qubership.integration.platform.catalog.mapping.UserMapper;
 import org.qubership.integration.platform.catalog.persistence.configs.entity.chain.Folder;
@@ -19,6 +20,7 @@ import org.qubership.integration.platform.designtime.catalog.rest.v2.dto.UpdateF
         }
 )
 public interface FolderItemMapper {
+    @Mapping(target = "id", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     Folder asFolder(CreateFolderRequest request);
 
     Folder asFolder(UpdateFolderRequest request);
