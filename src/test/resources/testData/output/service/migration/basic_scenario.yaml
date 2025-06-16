@@ -161,7 +161,7 @@ elements:
             properties:
               brokers: "kafka:9092"
               connectionSourceType: "manual"
-              keySerializer: ""
+              keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
               saslMechanism: "GSSAPI"
               securityProtocol: "PLAINTEXT"
               sslProtocol: "TLS"
@@ -264,7 +264,7 @@ elements:
                     properties:
                       brokers: "kafka:9092"
                       connectionSourceType: "manual"
-                      keySerializer: ""
+                      keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
                       saslMechanism: "GSSAPI"
                       securityProtocol: "PLAINTEXT"
                       sslProtocol: "TLS"
@@ -307,7 +307,7 @@ elements:
     properties:
       brokers: "kafka:9092"
       connectionSourceType: "manual"
-      keySerializer: ""
+      keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
       saslMechanism: "GSSAPI"
       securityProtocol: "PLAINTEXT"
       sslProtocol: "TLS"
@@ -330,7 +330,7 @@ elements:
             properties:
               brokers: "kafka:9092"
               connectionSourceType: "manual"
-              keySerializer: ""
+              keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
               saslMechanism: "GSSAPI"
               securityProtocol: "PLAINTEXT"
               sslProtocol: "TLS"

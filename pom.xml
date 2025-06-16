@@ -5,6 +5,7 @@
     <groupId>org.qubership</groupId>
     <artifactId>qip-designtime-catalog</artifactId>
     <version>${revision}</version>
+    <name>QIP Design-Time Catalog</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -14,8 +15,8 @@
     </parent>
 
     <properties>
-        <revision>0.1.5</revision>
-        <catalog-library.revision>0.1.4</catalog-library.revision>
+        <revision>0.2.0</revision>
+        <catalog-library.revision>0.2.0</catalog-library.revision>
 
         <!-- 3rd party dependencies -->
 
@@ -475,7 +476,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
