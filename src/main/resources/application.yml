@@ -8,12 +8,24 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: proxy-to-runtime
-          uri: http://qip-runtime-catalog:8080
+        - id: rewrite-actions-log-and-proxy-to-catalog
+          uri: http://runtime-catalog:8080
+          predicates:
+            - Path=/v1/actions-log/**
+          filters:
+            - RewritePath=/v1/actions-log/?(?<segment>.*), /v1/catalog/actions-log/$\{segment}
+        - id: rewrite-imports-instructions-and-proxy-to-catalog
+          uri: http://runtime-catalog:8080
+          predicates:
+            - Path=/v1/import-instructions/**
+          filters:
+            - RewritePath=/v1/import-instructions/?(?<segment>.*), /v1/catalog/import-instructions/$\{segment}
+        - id: proxy-to-catalog
+          uri: http://runtime-catalog:8080
           predicates:
             - Path=/**
           filters:
-            - RewritePath=/(?<segment>.*), /$\{segment}    # forward full path without prefix rewriting
+            - RewritePath=/(?<segment>.*), /$\{segment}     # forward full path without prefix rewriting
 management:
   endpoints:
     web:
