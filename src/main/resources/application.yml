@@ -9,19 +9,19 @@ spring:
     gateway:
       routes:
         - id: rewrite-actions-log-and-proxy-to-catalog
-          uri: http://runtime-catalog:8080
+          uri: ${qip.internal-services.runtime-catalog}
           predicates:
             - Path=/v1/actions-log/**
           filters:
             - RewritePath=/v1/actions-log/?(?<segment>.*), /v1/catalog/actions-log/$\{segment}
         - id: rewrite-imports-instructions-and-proxy-to-catalog
-          uri: http://runtime-catalog:8080
+          uri: ${qip.internal-services.runtime-catalog}
           predicates:
             - Path=/v1/import-instructions/**
           filters:
             - RewritePath=/v1/import-instructions/?(?<segment>.*), /v1/catalog/import-instructions/$\{segment}
         - id: proxy-to-catalog
-          uri: http://runtime-catalog:8080
+          uri: ${qip.internal-services.runtime-catalog}
           predicates:
             - Path=/**
           filters:
@@ -37,3 +37,7 @@ logging:
   level:
     root: ${ROOT_LOG_LEVEL:INFO}
   config: classpath:logback-spring.xml
+
+qip:
+  internal-services:
+    runtime-catalog: http://runtime-catalog:8080
