@@ -17,15 +17,12 @@
 package org.qubership.integration.platform.designtime.catalog;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class DesignTimeCatalogApplicationRunner {
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(DesignTimeCatalogApplicationRunner.class);
-        app.setWebApplicationType(WebApplicationType.SERVLET);
-        app.run(args);
+        new SpringApplication(DesignTimeCatalogApplicationRunner.class).run(args);
     }
 }
